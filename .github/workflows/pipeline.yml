@@ -32,7 +32,7 @@ jobs:
       - name: Run Linting
         run: |
           flake8 .
-
+ 
       - name: Run Tests
         run: |
           pytest -v
