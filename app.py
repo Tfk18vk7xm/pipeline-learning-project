@@ -7,9 +7,9 @@ app = Flask(__name__)
 def home():
     return "Pipeline Learning Project Running Successfully"
 
-@app.route("/health")
-def health():
-    return {"status": "healthy"}
+# @app.route("/health")
+# def health():
+#     return {"status": "healthy"}
 
 if __name__ == "__main__":
     app.run(debug=True)
