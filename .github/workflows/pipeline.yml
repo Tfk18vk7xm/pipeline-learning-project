@@ -1,25 +1,52 @@
-name: First CI Pipeline   #Automatically validate code ater pus
+name: Enterprise CI Pipeline
 
-on:    #Pipeline starts when code is pushed to main branch
+on:
   push:
     branches:
       - main
 
-jobs: #Major execution section
-  build-and-validate:
-    runs-on: ubuntu-latest #Runner
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build-test-lint:
+
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository Code
+
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set Up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
 
-      - name: Run Application Validation
-        run: python app.py
+      - name: Run Linting
+        run: |
+          flake8 .
+
+      - name: Run Tests
+        run: |
+          pytest -v
+
+      - name: Create Artifact Directory
+        run: |
+          mkdir artifacts
+
+      - name: Create Build Artifact
+        run: |
+          zip -r artifacts/flask-app.zip .
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flask-build
+          path: artifacts/flask-app.zip
